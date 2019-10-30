@@ -2,6 +2,8 @@
 
 > 具体代码可以到 github spring-annotation-learn 这个项目中去看
 
+## IoC 相关注解
+
 ### 1. 给容器中注册组件
 
 1. 包扫描 + 组件标注注解（`@Component/@Controller/@Service/@Repository`）
@@ -128,8 +130,8 @@
           1. 基本数值
           2. SpEL, #{}
           3. ${}, 取出 Environment 中的属性值
-             * 使用 `@PropertySource` 读取外部配置文件中的 k/v 保存到运行的环境中
-             * `@PropertySource(value = {"classpath:student.properties"}, encoding = "UTF-8")`
+                * 使用 `@PropertySource` 读取外部配置文件中的 k/v 保存到运行的环境中
+                * `@PropertySource(value = {"classpath:student.properties"}, encoding = "UTF-8")`
 
 
 
@@ -203,3 +205,49 @@ Spring 利用依赖注入（DI），完成对 IoC 容器中各个组件的依赖
       3. 如果写在配置类上，只有是指定的环境的时候，整个配置类里面的所有配置才能开始生效
 
       4. 没有标注环境标识的 bean，任何环境都是加载
+
+
+
+## AOP 相关注解
+
+AOP：指在程序运行期间动态的将某段代码切入到指定方法指定位置进行运行的编程方式
+
+### AOP 使用步骤：
+
+1. pom 导入 Spring AOP 模块 `spring-aspects`
+2. 定义一个业务逻辑类：在业务逻辑运行的时候（方法之前，方法运行结束，方法出现异常等）执行一些方法（比如打印日志等）
+3. 定义一个切面类，比如日志切面类：切面类里面的方法需要动态感知业务逻辑类的方法运行到哪里，然后执行不同的方法
+   * 通知方法：（`JoinPoint` 这个参数如果出现的话，一定要出现在参数表的第一位）
+     * 前置通知 `@Before`：在目标方法运行之前运行
+     * 后置通知 `@After`：在目标方法运行结束之后运行（无论方法正常结束还是异常结束）
+     * 返回通知 `@AfterReturing`：在目标方法正常返回之后运行
+     * 异常通知 `@AfterThrowing`：在目标方法出现异常之后运行
+     * 环绕通知 `@Around`：动态代理，手动推进目标方法运行`proceedingJoinPoint.procced(proceedingJoinPoint.getArgs())`
+4. 给切面类的目标方法标注何时何地运行（也就是标注通知注解）
+   * `@Pointcut` 抽取切入点表达式，写法格式可以看[官网文档]( https://docs.spring.io/spring/docs/5.2.x/spring-framework-reference/core.html#aop-pointcuts )
+     * 如果在本类引用，直接写方法名称加小括号
+     * 如果在其他类引用，必须写全限定名加小括号
+5. 将切面类和目标方法所在的类（业务逻辑类）加入到容器中
+6. 必须告诉 Spring 哪个是切面类 ，使用 `@Aspect` 给切面类加一个注解
+7. 给配置类加 `@EnableAspectJAutoProxy` ，开启主机与注解的 AOP 模式
+
+#### 三步：
+
+1. 将业务逻辑类和切面类都加入到容器中；告诉 Spring 哪个是切面类
+2. 在切面类上的每一个通知方法标注通知注解，告诉 Spring 何时何地运行（写好切入点表达式）
+3. 开启基于注解的 aop  模式
+
+#### 用到的注解：
+
+1. `@Aspect, @Pointcut` 
+2. ` @Before/@After/@AfterReturning/@AfterThrowing/@Around `
+3. ` @EnableAspectJAutoProxy`
+
+
+
+### AOP 原理
+
+从 ` @EnableAspectJAutoProxy` 开始入手研究
+
+* ` @EnableAspectJAutoProxy`  导入了 `AspectJAutoProxyRegistrar.class`
+
