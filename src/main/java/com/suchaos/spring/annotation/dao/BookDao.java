@@ -1,5 +1,6 @@
 package com.suchaos.spring.annotation.dao;
 
+import lombok.*;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,5 +10,12 @@ import org.springframework.stereotype.Repository;
  * @date 2019/10/29
  */
 @Repository
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class BookDao {
+
+    private String label = "@Autowired";
 }
