@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
  * @author suchao
  * @date 2019/10/30
  */
-@Component
 public class MathCalculator {
 
     public int div(int i, int j) {

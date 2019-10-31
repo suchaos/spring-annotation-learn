@@ -39,13 +39,27 @@ public class IoCTestUsingJunit_AOP {
     @Test
     public void testAOP() {
         MathCalculator calculator = applicationContext.getBean(MathCalculator.class);
+        System.out.println(calculator);
         calculator.div(1, 2);
         printLine();
-        calculator.div(1, 0);
+        printBeans();
+        printLine();
+        printBeansOfType(MathCalculator.class);
+        printLine();
+        MathCalculator mathCalculator = applicationContext.getBean(MathCalculator.class);
+        System.out.println(mathCalculator);
+        //calculator.div(1, 0);
     }
 
     private void printBeans() {
         String[] names = applicationContext.getBeanDefinitionNames();
+        for (String name : names) {
+            System.out.println(name);
+        }
+    }
+
+    private void printBeansOfType(Class<?> type) {
+        String[] names = applicationContext.getBeanNamesForType(type);
         for (String name : names) {
             System.out.println(name);
         }

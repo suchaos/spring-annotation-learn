@@ -1,5 +1,8 @@
 package com.suchaos.spring.annotation.config;
 
+import com.suchaos.spring.annotation.aop.LogAspect;
+import com.suchaos.spring.annotation.aop.MathCalculator;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -12,6 +15,16 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  */
 @Configuration
 @EnableAspectJAutoProxy
-@ComponentScan("com.suchaos.spring.annotation.aop")
+@ComponentScan({"com.suchaos.spring.annotation.aop", "com.suchaos.spring.annotation.beanpostprocessor"})
 public class MainConfigOfAOP {
+
+    @Bean
+    public LogAspect logAspect() {
+        return new LogAspect();
+    }
+
+    @Bean
+    public MathCalculator mathCalculator() {
+        return new MathCalculator();
+    }
 }

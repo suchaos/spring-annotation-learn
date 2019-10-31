@@ -2,7 +2,6 @@ package com.suchaos.spring.annotation.aop;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
@@ -12,18 +11,26 @@ import java.util.Arrays;
  * @author suchao
  * @date 2019/10/30
  */
-@Component
 @Aspect
 public class LogAspect {
 
     @Pointcut("execution(* com.suchaos.spring.annotation.aop.MathCalculator.*(..))")
     public void pointCut() {
+    }
 
+    @Pointcut("execution(* com.suchaos.spring.annotation.aop.MathCalculator.add(..))")
+    public void pointCut2() {
     }
 
 
     @Before("pointCut()")
     public void logStart(JoinPoint joinPoint) {
+        System.out.printf("方法[%s]开始运行 --- 参数列表是：{%s}\n",
+                joinPoint.getSignature().toLongString(), Arrays.toString(joinPoint.getArgs()));
+    }
+
+    @Before("pointCut2()")
+    public void logStart2(JoinPoint joinPoint) {
         System.out.printf("方法[%s]开始运行 --- 参数列表是：{%s}\n",
                 joinPoint.getSignature().toLongString(), Arrays.toString(joinPoint.getArgs()));
     }
