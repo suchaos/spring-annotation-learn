@@ -14,7 +14,7 @@ import java.util.Arrays;
 @Aspect
 public class LogAspect {
 
-    @Pointcut("execution(* com.suchaos.spring.annotation.aop.MathCalculator.*(..))")
+    @Pointcut("execution(* com.suchaos.spring.annotation.aop.MathCalculator.div(..))")
     public void pointCut() {
     }
 

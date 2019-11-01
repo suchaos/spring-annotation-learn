@@ -41,13 +41,6 @@ public class IoCTestUsingJunit_AOP {
         MathCalculator calculator = applicationContext.getBean(MathCalculator.class);
         System.out.println(calculator);
         calculator.div(1, 2);
-        printLine();
-        printBeans();
-        printLine();
-        printBeansOfType(MathCalculator.class);
-        printLine();
-        MathCalculator mathCalculator = applicationContext.getBean(MathCalculator.class);
-        System.out.println(mathCalculator);
         //calculator.div(1, 0);
     }
 
