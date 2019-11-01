@@ -70,11 +70,11 @@
 #### 指定初始化和销毁的方法
 
 2. `@Bean(initMethod = "init", destroyMethod = "destory")` 或者 xml 中定义
-3. 通过让 bean 实现 ` InitializingBean ` 这个接口，来定义初始化逻辑；销毁则是实现 ` DisposableBean ` 接口，来定义销毁逻辑
-4. 可以使用  JSR250 规范定义的注解 
+2. 通过让 bean 实现 ` InitializingBean ` 这个接口，来定义初始化逻辑；销毁则是实现 ` DisposableBean ` 接口，来定义销毁逻辑
+3. 可以使用  JSR250 规范定义的注解 
    * `@PostConstruct`：在 bean 创建完成并且属性赋值完成，来执行初始化
    * `@PreDestroy`：在容器销毁 bean 之前，通知我们进行清理工作
-5. ` BeanPostProcessor `：bean 的后置处理器，在 bean 初始化前后进行一些清理工作
+4. ` BeanPostProcessor `：bean 的后置处理器，在 bean 初始化前后进行一些清理工作
    * `postProcessBeforeInitialization `：在初始化之前工作
    * `postProcessAfterInitialization`：在初始化之后工作
 
@@ -131,8 +131,8 @@
 1. 基本数值
 2. SpEL, #{}
 3. ${}, 取出 Environment 中的属性值
-   * 使用 `@PropertySource` 读取外部配置文件中的 k/v 保存到运行的环境中
-   * `@PropertySource(value = {"classpath:student.properties"}, encoding = "UTF-8")`
+      * 使用 `@PropertySource` 读取外部配置文件中的 k/v 保存到运行的环境中
+      * `@PropertySource(value = {"classpath:student.properties"}, encoding = "UTF-8")`
 
 
 
@@ -278,35 +278,33 @@ AOP：指在程序运行期间动态的将某段代码切入到指定方法指�
 ##### 流程：
 
 1. 传入配置类，创建容器
-
 2. 注册配置类，调用 `refresh()` 刷新容器
-
 3. `registerBeanPostProcessors(beanFactory)`; 注册 bean 的后置处理器来方便拦截 bean 的创建 `PostProcessorRegistrationDelegate#registerBeanPostProcessors()`
-
-   1. 先获取 ioc 容器已经定义了的需要创建对象的所有 `BeanPostProcessor`
-
-   2. 给容器中加别的 `BeanPostProcessor`
-
-   3. 优先注册实现了 `PriorityOrdered `接口的 `BeanPostProcessor`
-
-   4. 再给容器中注册实现了 `Ordered` 接口的 `BeanPostProcessor`；
-
-   5. 注册没实现优先级接口的 `BeanPostProcessor`；
-
-   6. 注册 `BeanPostProcessor`，实际上就是创建 `BeanPostProcessor ` 对象，保存在容器中；
-
-      创建`internalAutoProxyCreator` 的`BeanPostProcessor`实际上是【`AnnotationAwareAspectJAutoProxyCreator`】这个类型
-
-      1. 创建 Bean 的实例 `createBeanInstance();`
-      2. 给 Bean 的属性赋值`populateBean();`
-      3. 初始化 Bean，`initializeBean();` `AbstractAutowireCapableBeanFactory#initializeBean`
-         1. `AbstractAutowireCapableBeanFactory#invokeAwareMethods`：处理 Aware 接口的方法回调
-         2. `applyBeanPostProcessorsBeforeInitialization();`：应用后置处理器的 `postProcessBeforeInitialization()`
-         3. `invokeInitMethods();`：执行自定义的初始化方法
-         4. `applyBeanPostProcessorsAfterInitialization();`：执行后置处理器的`postProcessAfterInitialization()`
-      4. `AnnotationAwareAspectJAutoProxyCreator` 这个 `BeanPostProcessor` 创建成功；---> `aspectJAdvisorsBuilder`
-
-   7. 把 `BeanPostProcessor` 注册到 `BeanFactory` 中；`beanFactory.addBeanPostProcessor(postProcessor)`
+	
+	1. 先获取 ioc 容器已经定义了的需要创建对象的所有 `BeanPostProcessor`
+	
+	2. 给容器中加别的 `BeanPostProcessor`
+	
+	3. 优先注册实现了 `PriorityOrdered `接口的 `BeanPostProcessor`
+	
+	4. 再给容器中注册实现了 `Ordered` 接口的 `BeanPostProcessor`；
+	
+	5. 注册没实现优先级接口的 `BeanPostProcessor`；
+	
+	6. 注册 `BeanPostProcessor`，实际上就是创建 `BeanPostProcessor ` 对象，保存在容器中；
+	
+	   创建`internalAutoProxyCreator` 的`BeanPostProcessor`实际上是【`AnnotationAwareAspectJAutoProxyCreator`】这个类型
+	
+	   1. 创建 Bean 的实例 `createBeanInstance();`
+	   2. 给 Bean 的属性赋值`populateBean();`
+	   3. 初始化 Bean，`initializeBean();` `AbstractAutowireCapableBeanFactory#initializeBean`
+	      1. `AbstractAutowireCapableBeanFactory#invokeAwareMethods`：处理 Aware 接口的方法回调
+	      2. `applyBeanPostProcessorsBeforeInitialization();`：应用后置处理器的 `postProcessBeforeInitialization()`
+	      3. `invokeInitMethods();`：执行自定义的初始化方法
+	      4. `applyBeanPostProcessorsAfterInitialization();`：执行后置处理器的`postProcessAfterInitialization()`
+	   4. `AnnotationAwareAspectJAutoProxyCreator` 这个 `BeanPostProcessor` 创建成功；---> `aspectJAdvisorsBuilder`
+	   
+	7. 把 `BeanPostProcessor` 注册到 `BeanFactory` 中；`beanFactory.addBeanPostProcessor(postProcessor)`
 
 ======= 以上是创建和注册 `AnnotationAwareAspectJAutoProxyCreator` 的过程 ========
 
@@ -329,7 +327,7 @@ AOP：指在程序运行期间动态的将某段代码切入到指定方法指�
          * >  * 					【BeanPostProcessor是在Bean对象创建完成初始化前后调用的】
            >  * 					【InstantiationAwareBeanPostProcessor是在创建 Bean 实例之前先尝试用后置处理器返回对象的】
            >
-           >  所以，`AnnotationAwareAspectJAutoProxyCreator` 会在任何 bean 创建之前先尝试返回bean的实例
+           > 所以，`AnnotationAwareAspectJAutoProxyCreator` 会在任何 bean 创建之前先尝试返回bean的实例
 
          1. `resolveBeforeInstantiation(beanName, mbdToUse) // Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.;`：希望后置处理器再次能返回一个代理对象；如果能返回代理对象就使用，如果不能就继续
 
@@ -343,9 +341,10 @@ AOP：指在程序运行期间动态的将某段代码切入到指定方法指�
                 bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
             }
             ```
-            2.  `AbstractAutowireCapableBeanFactory#doCreateBean`真正的去创建一个bean实例；和3.6流程一样
+
             
-            
+
+         2. `AbstractAutowireCapableBeanFactory#doCreateBean`真正的去创建一个bean实例；和3.6流程一样；
 
 ---
 
@@ -407,30 +406,30 @@ AOP：指在程序运行期间动态的将某段代码切入到指定方法指�
       1. `List<Object> interceptorList` 保存所有拦截器：一个默认的 `ExposeInvocationInterceptor `和 自己写的其他增强器
 
       2. 遍历所有的增强器，将其转为 `Interceptor`，`registry.getInterceptors(advisor)`，转换完成返回 `MethodInterceptor` 数组
-
+   
          1. 将增强器转为 `List<MethodInterceptor>`，
-
+   
          2. 如果是 `MethodInterceptor`，
-
+   
             * 直接加入到集合中
-
+   
              * 				如果不是，使用 `AdvisorAdapter ` 将增强器转为 `MethodInterceptor`
-
+   
    3. 如果没有拦截器链，直接执行目标方法，拦截器链（每一个通知方法又被包装为方法拦截器，利用`MethodInterceptor` 机制）
-
+   
    4. 如果有拦截器链，把需要执行的目标对象，目标方法，拦截器链等信息传入创建一个 `CglibMethodInvocation` 对象，并调用 `Object retVal =  mi.proceed()`
-
+   
    5. 拦截器链的触发过程：`ReflectiveMethodInvocation#proceed` 递归调用，（相当于将链串起来，然后反向执行），拦截器链的机制，保证通知方法与目标方法的执行顺序；
-
+   
       1. 如果没有拦截器执行执行目标方法，或者拦截器的索引和拦截器数组 -1 大小一样（执行到了最后一个拦截器）执行目标方法
       2. 链式获取每一个拦截器，拦截器执行invoke方法，每一个拦截器等待下一个拦截器执行完成返回以后再来执行
-
    
-
+   
+   
    ---
-
+   
    #### AOP 总结
-
+   
    1. @EnableAspectJAutoProxy 开启AOP功能
    2. @EnableAspectJAutoProxy 会给容器中注册一个组件 AnnotationAwareAspectJAutoProxyCreator
    3. AnnotationAwareAspectJAutoProxyCreator是一个后置处理器
@@ -438,7 +437,7 @@ AOP：指在程序运行期间动态的将某段代码切入到指定方法指�
       1. `registerBeanPostProcessors()` 注册后置处理器；创建AnnotationAwareAspectJAutoProxyCreator 对象
       2. `finishBeanFactoryInitialization()` 初始化剩下的单实例bean
          1. 创建业务逻辑组件和切面组件
-          2. AnnotationAwareAspectJAutoProxyCreator 拦截组件的创建过程
+          * 				AnnotationAwareAspectJAutoProxyCreator 拦截组件的创建过程
           3. 组件创建完之后，判断组件是否需要增强
              * 是：切面的通知方法，包装成增强器（Advisor），然后给业务逻辑组件创建一个代理对象（cglib）；
    5. 执行目标方法：
@@ -447,5 +446,40 @@ AOP：指在程序运行期间动态的将某段代码切入到指定方法指�
          1. 得到目标方法的拦截器链（增强器包装成拦截器 `MethodInterceptor`）
          2. 利用拦截器的链式机制，依次进入每一个拦截器进行执行
          3. 效果：
-             * 正常执行：前置通知---->目标方法---->后置通知---->返回通知
-             * 出现异常：前置通知---->目标方法---->后置通知---->异常通知
+             * 					正常执行：前置通知---->目标方法---->后置通知---->返回通知
+             * 					出现异常：前置通知---->目标方法---->后置通知---->异常通知
+
+
+
+### 声明式事务
+
+#### 环境搭建
+
+1. 导入相关依赖：数据源，数据库驱动，Spring-jdbc 模块
+2. 配置数据源，`JdbcTemplate`
+3. 方法或类上标注 `@Transactional`
+4. 开启事务管理功能：`@EnableTransactionManagement`
+5. 配置事务管理器 `PlatformTransactionManager` 来控制事务
+
+#### 原理
+
+1. `@EnableTransactionManagement` 利用 `TransactionManagementConfigurationSelector` 向容器中导入组件，默认情况下是导入了两个组件：`AutoProxyRegistrar`，`ProxyTransactionManagementConfiguration`
+
+2. `AutoProxyRegistrar`：给容器中注册一个 `InfrastructureAdvisorAutoProxyCreator` 组件
+
+   1. 作用只是利用后置处理器机制，在对象创建以后，包装对象成一个代理对象（包含增强器），代理对象执行方法利用拦截器链进行调用
+
+   > 注意：`InfrastructureAdvisorAutoProxyCreator`  的 bean id 也是`org.springframework.aop.config.internalAutoProxyCreator`，如果同时 `@EnableAspectJAutoProxy `，`AnnotationAwareAspectJAutoProxyCreator` 最终会占用这个 id
+   >
+   > 在 IDEA 中一起查看这两个类的继承关系，发现都是继承自 `AbstractAdvisorAutoProxyCreator`
+
+3. `ProxyTransactionManagementConfiguration` -- 这个是一个配置类，而是文档显示： @Configuration class that registers the Spring infrastructure beans necessary to enable proxy-based annotation-driven transaction management.
+
+   1. 给容器中注册事务增强器；
+      1. 事务增强器要用事务注解的信息，`AnnotationTransactionAttributeSource` 用于解析事务注解
+      2. 事务增强器要用事务拦截器，`TransactionInterceptor` 中保存了事务属性信息，事务管理器，而且它还是一个 `MethodInterceptor`， 在目标方法执行的时候，执行这些拦截器链， `TransactionAspectSupport#invokeWithinTransaction`
+         1. 先获取事务相关的信息
+         2. 再获取事务管理器（`PlatformTransactionManager`），如果事先没有添加指定任何（`@Transactional(transactionManager = )`），最后会从容器中按照类型获取 `this.beanFactory.getBean(PlatformTransactionManager.class)`
+         3. 执行目标方法，
+            1. 如果异常，获取到事务管理器，利用事务管理器回滚操作
+            2. 如果正常，利用事务管理器，提交事务
