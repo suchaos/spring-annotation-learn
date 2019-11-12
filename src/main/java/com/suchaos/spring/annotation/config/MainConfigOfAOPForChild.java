@@ -18,10 +18,10 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 //@ComponentScan({"com.suchaos.spring.annotation.aop", "com.suchaos.spring.annotation.beanpostprocessor"})
 public class MainConfigOfAOPForChild {
 
-    @Bean
-    public LogAspect logAspect() {
-        return new LogAspect();
-    }
+//    @Bean
+//    public LogAspect logAspect() {
+//        return new LogAspect();
+//    }
 
     @Bean
     public MathCalculator mathCalculator() {
